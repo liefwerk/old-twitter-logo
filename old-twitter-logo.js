@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Old twitter logo - twitter.com
 // @namespace   Violentmonkey Scripts
-// @match       https://twitter.com/home
+// @match       https://twitter.com/*
 // @grant       none
 // @version     1.0
 // @author      -
