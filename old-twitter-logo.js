@@ -22,7 +22,7 @@ twitterLoaderLogo.firstChild.innerHTML = oldTwitterSVG;
 const twitterFaviconLogo = document.querySelector('link[rel~=icon]');
 twitterFaviconLogo.href = "https://abs.twimg.com/favicons/twitter.2.ico";
 
-const disconnect = VM.observe(document.body, () => {
+const disconnectLogoLink = VM.observe(document.body, () => {
 
   // Gets the new twitter home logo (at the top left of the app)
   const twitterLogoLink = document.querySelector('a[aria-label="Twitter"]');
@@ -41,5 +41,28 @@ const disconnect = VM.observe(document.body, () => {
 
     // disconnect observer
     return true;
+
   }
+
+  const twitterTitle = document.querySelector("title");
+
+  const observer = new MutationObserver(() => {
+    if (twitterTitle && twitterTitle.innerHTML.includes("/ X")) {
+
+      const oldtwitterTitle = twitterTitle.innerHTML.replace("/ X", "/ Twitter");
+      twitterTitle.innerHTML = oldtwitterTitle;
+
+      // disconnect observer
+      return true;
+    } else if (twitterTitle && twitterTitle.innerHTML === "X") {
+      const oldtwitterTitle = twitterTitle.innerHTML.replace("X", "Twitter");
+      twitterTitle.innerHTML = oldtwitterTitle;
+
+      // disconnect observer
+      return true;
+    }
+  });
+
+  observer.observe(twitterTitle, { subtree: true, childList: true });
+
 });
