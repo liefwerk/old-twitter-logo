@@ -25,7 +25,8 @@ twitterFaviconLogo.href = "https://abs.twimg.com/favicons/twitter.2.ico";
 const disconnectLogoLink = VM.observe(document.body, () => {
 
   // Gets the new twitter home logo (at the top left of the app)
-  const twitterLogoLink = document.querySelector('a[aria-label="Twitter"]');
+  const twitterLogoLink = document.querySelector('a[aria-label="X"]');
+
 
   // Waits for the logo to appear
   if (twitterLogoLink) {
@@ -41,28 +42,57 @@ const disconnectLogoLink = VM.observe(document.body, () => {
 
     // disconnect observer
     return true;
-
   }
+});
+
+const disconnectLogoLeftPanel = VM.observe(document.body, () => {
+  // Gets the new twitter logo (from the left panel)
+  const twitterLogoLeftPanel = document.querySelector('a[href~="/i/verified-choose"]');
+
+  if (twitterLogoLeftPanel) {
+
+    const twitterLogoLeftPanelWrapper = twitterLogoLeftPanel.firstChild;
+
+    for (const child of twitterLogoLeftPanelWrapper.children) {
+      if(child.tagName == "svg") {
+        // Replaces the new twitter logo with the old one
+        child.innerHTML = oldTwitterSVG;
+      } else if (child.tagName == "DIV") {
+        for (const grandchild of child.children) {
+          if(grandchild.tagName == "svg") {
+            // Replaces the new twitter logo with the old one
+            grandchild.innerHTML = oldTwitterSVG;
+          }
+        }
+      }
+    }
+
+    // disconnect observer
+    return true;
+  }
+
+});
+
+const disconnectTwitterTitle = VM.observe(document.body, () => {
 
   const twitterTitle = document.querySelector("title");
 
-  const observer = new MutationObserver(() => {
-    if (twitterTitle && twitterTitle.innerHTML.includes("/ X")) {
+  if (twitterTitle) {
+    const observer = new MutationObserver(() => {
+      if (twitterTitle && twitterTitle.innerHTML.includes("/ X")) {
 
-      const oldtwitterTitle = twitterTitle.innerHTML.replace("/ X", "/ Twitter");
-      twitterTitle.innerHTML = oldtwitterTitle;
+        const oldtwitterTitle = twitterTitle.innerHTML.replace("/ X", "/ Twitter");
+        twitterTitle.innerHTML = oldtwitterTitle;
 
-      // disconnect observer
-      return true;
-    } else if (twitterTitle && twitterTitle.innerHTML === "X") {
-      const oldtwitterTitle = twitterTitle.innerHTML.replace("X", "Twitter");
-      twitterTitle.innerHTML = oldtwitterTitle;
+      } else if (twitterTitle && twitterTitle.innerHTML === "X") {
+        const oldtwitterTitle = twitterTitle.innerHTML.replace("X", "Twitter");
+        twitterTitle.innerHTML = oldtwitterTitle;
+      }
+    });
 
-      // disconnect observer
-      return true;
-    }
-  });
+    observer.observe(twitterTitle, { subtree: true, childList: true });
 
-  observer.observe(twitterTitle, { subtree: true, childList: true });
-
+    // disconnect observer
+    return true;
+  }
 });
